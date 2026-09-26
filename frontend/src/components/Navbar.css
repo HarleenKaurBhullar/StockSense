@@ -1,0 +1,182 @@
+/* ========================================
+   STOCKSENSE NAVBAR
+======================================== */
+
+.navbar {
+  width: calc(100% - 40px);
+  height: 64px;
+
+  margin: 8px 20px 0;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 20px;
+
+  background: #0b0b0b;
+
+  border: 1.5px solid #ff7a00;
+  border-bottom: 2px solid #ff7a00;
+
+  border-radius: 20px 20px 0 0;
+
+  position: relative;
+
+  color: #ffffff;
+
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   LEFT NAVIGATION
+======================================== */
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+
+  flex: 1;
+}
+
+.nav-link {
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #d7d7d7;
+
+  padding: 6px 0;
+
+  font-family: "Trebuchet MS", Arial, sans-serif;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  letter-spacing: 0.2px;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #ff7a00;
+
+  transform: translateY(-1px);
+}
+
+.nav-link.active {
+  color: #ff7a00;
+}
+
+
+/* ========================================
+   STOCKSENSE BRAND
+======================================== */
+
+.navbar-brand {
+  position: absolute;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: #ff7a00;
+
+  font-family: "Trebuchet MS", Arial, sans-serif;
+
+  font-size: 25px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+
+  white-space: nowrap;
+}
+
+.navbar-brand span {
+  color: #ff7a00;
+}
+
+
+/* ========================================
+   PROFILE / USER BUTTON
+======================================== */
+
+.profile-button {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: auto;
+
+  border: 1.5px solid #ff7a00;
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #ff7a00;
+
+  font-family: "Trebuchet MS", Arial, sans-serif;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.profile-button:hover {
+  background: #ff7a00;
+
+  color: #0b0b0b;
+
+  transform: translateY(-1px);
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 800px) {
+
+  .navbar {
+    width: calc(100% - 20px);
+
+    margin: 8px 10px 0;
+
+    padding: 0 12px;
+  }
+
+  .navbar-left {
+    gap: 10px;
+  }
+
+  .nav-link {
+    font-size: 12px;
+  }
+
+  .navbar-brand {
+    font-size: 20px;
+  }
+
+  .profile-button {
+    width: 34px;
+    height: 34px;
+  }
+}

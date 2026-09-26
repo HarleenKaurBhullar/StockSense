@@ -1,7 +1,15 @@
-import Auth from "./components/auth";
+import Navbar from "./components/Navbar";
 
 function App() {
-  return <Auth />;
+  return (
+    <>
+      <Navbar />
+
+      <main>
+        <h1>Dashboard</h1>
+      </main>
+    </>
+  );
 }
 
 export default App;
