@@ -2,10 +2,14 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./src/routes/authRoutes');
 
 const app = express();
-
+const categoryRoutes = require('./src/routes/categoryRoutes');
+const warehouseRoutes = require('./src/routes/warehouseRoutes');
+const locationRoutes = require('./src/routes/locationRoutes');
+const partnerRoutes = require('./src/routes/partnerRoutes');
+const reorderingRuleRoutes = require('./src/routes/reorderingRuleRoutes');
 
 // =========================
 // MIDDLEWARE
@@ -39,6 +43,11 @@ app.use(
   '/api/auth',
   authRoutes
 );
+app.use('/api/categories', categoryRoutes);
+app.use('/api/warehouses', warehouseRoutes);
+app.use('/api/locations', locationRoutes);
+app.use('/api/partners', partnerRoutes);
+app.use('/api/reordering-rules', reorderingRuleRoutes);
 
 
 // =========================

@@ -92,3 +92,13 @@ CREATE TABLE stock_ledger (
   document_id UUID REFERENCES stock_document(id),
   created_at TIMESTAMP DEFAULT NOW()
 );
+
+ CREATE TABLE password_reset_otps (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    otp_hash TEXT NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    attempts INTEGER DEFAULT 0,
+    verified BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
