@@ -1,13 +1,11 @@
 import Navbar from "./components/Navbar";
+import Warehouse from "./pages/Warehouse";
 
 function App() {
   return (
     <>
       <Navbar />
-
-      <main>
-        <h1>Dashboard</h1>
-      </main>
+      <Warehouse />
     </>
   );
 }
