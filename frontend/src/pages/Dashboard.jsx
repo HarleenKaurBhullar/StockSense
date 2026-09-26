@@ -1,6 +1,60 @@
+import { useEffect, useState } from "react";
 import "./Dashboard.css";
 
 function Dashboard() {
+  const [dashboard, setDashboard] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          "http://localhost:5000/api/dashboard/summary",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to fetch dashboard");
+        }
+
+        setDashboard(data);
+      } catch (error) {
+        console.error("Dashboard fetch error:", error);
+        setError(error.message);
+      }
+    };
+
+    fetchDashboard();
+  }, []);
+
+  if (error) {
+    return (
+      <div className="dashboard-page">
+        <main className="dashboard-content">
+          <p>{error}</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (!dashboard) {
+    return (
+      <div className="dashboard-page">
+        <main className="dashboard-content">
+          <p>Loading dashboard...</p>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard-page">
 
@@ -32,7 +86,7 @@ function Dashboard() {
               <h2>Receipts</h2>
 
               <span className="operation-count">
-                06
+                {String(dashboard.receipts.total).padStart(2, "0")}
               </span>
             </div>
 
@@ -44,7 +98,7 @@ function Dashboard() {
 
               <div className="stat">
                 <span className="stat-number">
-                  01
+                  {String(dashboard.receipts.late).padStart(2, "0")}
                 </span>
 
                 <span className="stat-label">
@@ -56,7 +110,7 @@ function Dashboard() {
 
               <div className="stat">
                 <span className="stat-number">
-                  05
+                  {String(dashboard.receipts.waiting).padStart(2, "0")}
                 </span>
 
                 <span className="stat-label">
@@ -96,7 +150,7 @@ function Dashboard() {
               <h2>Deliveries</h2>
 
               <span className="operation-count">
-                06
+                {String(dashboard.deliveries.total).padStart(2, "0")}
               </span>
             </div>
 
@@ -108,7 +162,7 @@ function Dashboard() {
 
               <div className="stat">
                 <span className="stat-number">
-                  01
+                  {String(dashboard.deliveries.late).padStart(2, "0")}
                 </span>
 
                 <span className="stat-label">
@@ -120,7 +174,7 @@ function Dashboard() {
 
               <div className="stat">
                 <span className="stat-number">
-                  05
+                  {String(dashboard.deliveries.waiting).padStart(2, "0")}
                 </span>
 
                 <span className="stat-label">

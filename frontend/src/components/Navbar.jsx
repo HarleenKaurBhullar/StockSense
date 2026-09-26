@@ -1,3 +1,5 @@
+
+import { NavLink } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
@@ -7,25 +9,41 @@ function Navbar() {
       {/* Left navigation */}
       <div className="navbar-left">
 
-        <button className="nav-link active">
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+        >
           Dashboard
-        </button>
+        </NavLink>
 
-        <button className="nav-link">
+        <NavLink
+          to="/warehouse"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+        >
           Operations
-        </button>
+        </NavLink>
 
-        <button className="nav-link">
+        {/* <NavLink
+          to="/product"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+        >
+          Product
+        </NavLink> */}
+
+        <NavLink
+          to="/stock"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+        >
           Stock
-        </button>
-
-        <button className="nav-link">
-          Move History
-        </button>
-
-        <button className="nav-link">
-          Settings
-        </button>
+        </NavLink>
 
       </div>
 

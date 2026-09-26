@@ -384,118 +384,45 @@ exports.verifyOTP = async (req, res) => {
   }
 };
 
-exports.verifyOTP = async (req, res) => {
-  const { email, otp } = req.body;
+exports.resetPassword = async (req, res) => {
+  const { resetToken, newPassword } = req.body;
 
   try {
-    if (!email || !otp) {
-      return res.status(400).json({
-        error: 'Email and OTP are required',
-      });
+    if (!resetToken || !newPassword) {
+      return res.status(400).json({ error: 'Token and new password are required' });
     }
 
-    const userResult = await db.query(
-      `SELECT id
-       FROM users
-       WHERE email = $1`,
-      [email]
-    );
-
-    if (userResult.rows.length === 0) {
-      return res.status(400).json({
-        error: 'Invalid or expired OTP',
-      });
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
     }
 
-    const userId = userResult.rows[0].id;
+    // Verify the temporary reset token
+    const decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
 
-    // Get latest unverified OTP
-    const otpResult = await db.query(
-      `SELECT id, otp_hash, expires_at, attempts
-       FROM password_reset_otps
-       WHERE user_id = $1
-       AND verified = FALSE
-       ORDER BY created_at DESC
-       LIMIT 1`,
-      [userId]
-    );
-
-    if (otpResult.rows.length === 0) {
-      return res.status(400).json({
-        error: 'Invalid or expired OTP',
-      });
+    if (decoded.purpose !== 'password_reset') {
+      return res.status(400).json({ error: 'Invalid token purpose' });
     }
 
-    const resetOTP = otpResult.rows[0];
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Check expiry
-    if (new Date() > new Date(resetOTP.expires_at)) {
-      return res.status(400).json({
-        error: 'OTP has expired',
-      });
-    }
-
-    // Limit attempts
-    if (resetOTP.attempts >= 5) {
-      return res.status(429).json({
-        error: 'Too many OTP attempts',
-      });
-    }
-
-    // Compare OTP
-    const validOTP = await bcrypt.compare(
-      otp,
-      resetOTP.otp_hash
-    );
-
-    if (!validOTP) {
-      await db.query(
-        `UPDATE password_reset_otps
-         SET attempts = attempts + 1
-         WHERE id = $1`,
-        [resetOTP.id]
-      );
-
-      return res.status(400).json({
-        error: 'Invalid or expired OTP',
-      });
-    }
-
-    // Mark OTP as verified
+    // Update the user's password in the database
     await db.query(
-      `UPDATE password_reset_otps
-       SET verified = TRUE
-       WHERE id = $1`,
-      [resetOTP.id]
+      `UPDATE users
+       SET password_hash = $1
+       WHERE id = $2`,
+      [hashedPassword, decoded.userId]
     );
 
-    /*
-      Create a temporary password-reset token.
-
-      This is NOT the normal login JWT.
-    */
-    const resetToken = jwt.sign(
-      {
-        userId,
-        purpose: 'password_reset',
-        otpId: resetOTP.id,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: '10m',
-      }
-    );
-
-    res.json({
-      message: 'OTP verified successfully',
-      resetToken,
-    });
+    res.json({ message: 'Password reset successful' });
 
   } catch (error) {
-    console.error('OTP verification error:', error);
+    console.error('Reset password error:', error);
+    
+    if (error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError') {
+      return res.status(400).json({ error: 'Invalid or expired reset token' });
+    }
 
-    res.status(500).json({
-      error: 'OTP verification failed',
-    });
+    res.status(500).json({ error: 'Failed to reset password' });
   }
 };

@@ -1,7 +1,11 @@
+
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 
 function Auth() {
+  const navigate = useNavigate();
+
   const [isLogin, setIsLogin] = useState(true);
   
   // Form state
@@ -37,18 +41,29 @@ function Auth() {
 
     // Prepare endpoint and payload based on mode
     const endpoint = isLogin ? "login" : "register";
-    const payload = isLogin 
-      ? { email: formData.email, password: formData.password }
-      : { name: formData.name, email: formData.email, password: formData.password };
+
+    const payload = isLogin
+      ? {
+          email: formData.email,
+          password: formData.password
+        }
+      : {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
+        };
 
     try {
-      const response = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/auth/${endpoint}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        }
+      );
 
       const data = await response.json();
 
@@ -57,22 +72,34 @@ function Auth() {
       }
 
       if (isLogin) {
-        // Handle successful login
+        // Successful login
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
+
         console.log("Login successful:", data);
-        
-        // TODO: Redirect user to dashboard or trigger auth state update
-        alert("Logged in successfully!"); 
+
+        // Go to dashboard
+        navigate("/dashboard");
+
       } else {
-        // Handle successful registration
+        // Successful registration
         console.log("Registration successful:", data);
+
         alert("Account created! Please log in.");
-        setIsLogin(true); // Switch to login view
-        setFormData({ ...formData, password: "", confirmPassword: "" }); // Clear passwords
+
+        setIsLogin(true);
+
+        // Clear passwords
+        setFormData({
+          ...formData,
+          password: "",
+          confirmPassword: ""
+        });
       }
+
     } catch (err) {
       setError(err.message);
+
     } finally {
       setLoading(false);
     }
@@ -81,16 +108,24 @@ function Auth() {
   return (
     <div className="auth-page">
       <div className="auth-box">
+
         {/* Logo / Brand */}
         <div className="auth-brand">
           <div className="brand-mark">S</div>
-          <h1>Stock<span>Sense</span></h1>
+
+          <h1>
+            Stock<span>Sense</span>
+          </h1>
+
           <p>Inventory Management System</p>
         </div>
 
         {/* Heading */}
         <div className="auth-heading">
-          <h2>{isLogin ? "Welcome Back" : "Create Account"}</h2>
+          <h2>
+            {isLogin ? "Welcome Back" : "Create Account"}
+          </h2>
+
           <p>
             {isLogin
               ? "Sign in to manage your inventory"
@@ -99,13 +134,26 @@ function Auth() {
         </div>
 
         {/* Error Message Display */}
-        {error && <div className="error-message" style={{ color: "red", marginBottom: "1rem", textAlign: "center" }}>{error}</div>}
+        {error && (
+          <div
+            className="error-message"
+            style={{
+              color: "red",
+              marginBottom: "1rem",
+              textAlign: "center"
+            }}
+          >
+            {error}
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
+
           {!isLogin && (
             <div className="input-group">
               <label>Full Name</label>
+
               <input
                 type="text"
                 name="name"
@@ -119,6 +167,7 @@ function Auth() {
 
           <div className="input-group">
             <label>Email</label>
+
             <input
               type="email"
               name="email"
@@ -131,6 +180,7 @@ function Auth() {
 
           <div className="input-group">
             <label>Password</label>
+
             <input
               type="password"
               name="password"
@@ -144,6 +194,7 @@ function Auth() {
           {!isLogin && (
             <div className="input-group">
               <label>Confirm Password</label>
+
               <input
                 type="password"
                 name="confirmPassword"
@@ -158,37 +209,58 @@ function Auth() {
           {/* Login options */}
           {isLogin && (
             <div className="login-options">
+
               <label>
                 <input type="checkbox" />
                 <span>Remember me</span>
               </label>
-              <button type="button" className="forgot-password">
+
+              <button
+                type="button"
+                className="forgot-password"
+              >
                 Forgot password?
               </button>
+
             </div>
           )}
 
           {/* Submit */}
-          <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? "Please wait..." : isLogin ? "Login" : "Create Account"}
+          <button
+            type="submit"
+            className="submit-btn"
+            disabled={loading}
+          >
+            {loading
+              ? "Please wait..."
+              : isLogin
+                ? "Login"
+                : "Create Account"}
           </button>
+
         </form>
 
         {/* Switch Login / Signup */}
         <div className="switch-auth">
+
           <span>
-            {isLogin ? "Don't have an account?" : "Already have an account?"}
+            {isLogin
+              ? "Don't have an account?"
+              : "Already have an account?"}
           </span>
+
           <button
             type="button"
             onClick={() => {
               setIsLogin(!isLogin);
-              setError(""); // Clear errors when switching modes
+              setError("");
             }}
           >
             {isLogin ? "Sign Up" : "Login"}
           </button>
+
         </div>
+
       </div>
     </div>
   );
