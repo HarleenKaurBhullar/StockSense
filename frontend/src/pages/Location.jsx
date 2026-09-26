@@ -8,10 +8,20 @@ function Location() {
 
   const fetchData = async () => {
     try {
+      const token = localStorage.getItem('token'); // Get token
+      
+      // Shared headers configuration
+      const fetchConfig = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+
       const [locRes, whRes] = await Promise.all([
-        fetch('/api/locations'),
-        fetch('/api/warehouses')
+        fetch('http://localhost:5000/api/locations', fetchConfig),
+        fetch('http://localhost:5000/api/warehouses', fetchConfig)
       ]);
+      
       const locData = await locRes.json();
       const whData = await whRes.json();
       
@@ -29,15 +39,22 @@ function Location() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/locations', {
+      const token = localStorage.getItem('token'); // Get token
+
+      const response = await fetch('http://localhost:5000/api/locations', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Attach token
+        },
         body: JSON.stringify(formData)
       });
       
       if (response.ok) {
         setFormData({ name: '', short_code: '', warehouse_id: '' }); // reset
         fetchData(); // refresh list
+      } else {
+        console.error('Failed to save location');
       }
     } catch (error) {
       console.error('Error saving location:', error);
@@ -50,8 +67,6 @@ function Location() {
       <div className="location-glow location-glow-two"></div>
 
       <main className="location-content">
-        {/* Header styling remains the same... */}
-        
         <div className="location-layout">
           {/* Locations List */}
           <section className="location-list-card">

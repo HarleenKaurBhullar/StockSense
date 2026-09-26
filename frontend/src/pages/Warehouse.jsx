@@ -7,7 +7,13 @@ function Warehouse() {
 
   const fetchWarehouses = async () => {
     try {
-      const response = await fetch('/api/warehouses');
+      const token = localStorage.getItem('token'); // Get token
+      
+      const response = await fetch('http://localhost:5000/api/warehouses', {
+        headers: {
+          'Authorization': `Bearer ${token}` // Attach token
+        }
+      });
       const data = await response.json();
       setWarehouses(data.warehouses || []);
     } catch (error) {
@@ -22,15 +28,22 @@ function Warehouse() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/warehouses', {
+      const token = localStorage.getItem('token'); // Get token
+
+      const response = await fetch('http://localhost:5000/api/warehouses', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Attach token
+        },
         body: JSON.stringify(formData)
       });
       
       if (response.ok) {
         setFormData({ name: '', short_code: '', address: '' }); // reset form
         fetchWarehouses(); // refresh list
+      } else {
+        console.error('Failed to save warehouse');
       }
     } catch (error) {
       console.error('Error saving warehouse:', error);
