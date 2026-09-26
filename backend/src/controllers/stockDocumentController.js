@@ -83,3 +83,26 @@ async function applyStockDelta(location_id, product_id, delta, document_id) {
     [product_id, location_id, delta, document_id]
   );
 }
+
+exports.list = async (req, res) => {
+  const { type } = req.query; // to pass ?type=receipt
+  
+  // You will need a query that joins stock_document, partner (for FROM), 
+  // location (for DESTINATION), and aggregates stock_document_line (for PRODUCTS)
+  const result = await db.query(`
+    SELECT 
+      sd.id, sd.reference, sd.created_at, sd.status,
+      p.name AS from_partner,
+      l.name AS dest_location,
+      COUNT(sdl.id) AS products_count
+    FROM stock_document sd
+    LEFT JOIN partner p ON sd.partner_id = p.id
+    LEFT JOIN location l ON sd.dest_location_id = l.id
+    LEFT JOIN stock_document_line sdl ON sd.id = sdl.document_id
+    WHERE sd.type = $1
+    GROUP BY sd.id, p.name, l.name
+    ORDER BY sd.created_at DESC
+  `, [type]);
+  
+  res.json({ documents: result.rows });
+};

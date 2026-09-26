@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
-
+import { useNavigate } from "react-router-dom";
 function Dashboard() {
+  const navigate = useNavigate();
   const [dashboard, setDashboard] = useState(null);
   const [error, setError] = useState("");
 
@@ -120,13 +121,16 @@ function Dashboard() {
 
             </div>
 
-            <button className="operation-button">
-              <span>Go to receive</span>
+           <button
+  className="operation-button"
+  onClick={() => navigate("/receipts")}
+>
+  <span>Go to receive</span>
 
-              <span className="arrow">
-                →
-              </span>
-            </button>
+  <span className="arrow">
+    →
+  </span>
+</button>
 
           </section>
 
@@ -184,13 +188,16 @@ function Dashboard() {
 
             </div>
 
-            <button className="operation-button">
-              <span>Go to deliver</span>
+            <button
+  className="operation-button"
+  onClick={() => navigate("/deliveries")}
+>
+  <span>Go to deliver</span>
 
-              <span className="arrow">
-                →
-              </span>
-            </button>
+  <span className="arrow">
+    →
+  </span>
+</button>
 
           </section>
 

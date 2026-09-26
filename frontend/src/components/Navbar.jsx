@@ -1,48 +1,46 @@
-
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
+  const navClass = ({ isActive }) =>
+    isActive ? "nav-link active" : "nav-link";
+
   return (
     <nav className="navbar">
 
       {/* Left navigation */}
       <div className="navbar-left">
 
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
-        >
+        <NavLink to="/dashboard" className={navClass}>
           Dashboard
         </NavLink>
 
-        <NavLink
-          to="/warehouse"
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
-        >
-          Operations
+        <NavLink to="/warehouse" className={navClass}>
+          Warehouse
         </NavLink>
 
-        {/* <NavLink
-          to="/product"
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
-        >
-          Product
+        <NavLink to="/location" className={navClass}>
+          Location
+        </NavLink>
+
+        {/* <NavLink to="/products" className={navClass}>
+          Products
         </NavLink> */}
 
-        <NavLink
-          to="/stock"
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
-        >
+        <NavLink to="/stock" className={navClass}>
           Stock
+        </NavLink>
+
+        <NavLink to="/receipts" className={navClass}>
+          Receipts
+        </NavLink>
+
+        <NavLink to="/deliveries" className={navClass}>
+          Deliveries
+        </NavLink>
+
+        <NavLink to="/move-history" className={navClass}>
+          Move History
         </NavLink>
 
       </div>
@@ -52,10 +50,10 @@ function Navbar() {
         Stock<span>Sense</span>
       </div>
 
-      {/* Profile */}
-      <button className="profile-button">
+      {/* Profile / Settings */}
+      <NavLink to="/settings" className="profile-button">
         S
-      </button>
+      </NavLink>
 
     </nav>
   );

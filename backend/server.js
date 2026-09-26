@@ -12,6 +12,11 @@ const locationRoutes = require('./src/routes/locationRoutes');
 const partnerRoutes = require('./src/routes/partnerRoutes');
 const reorderingRuleRoutes = require('./src/routes/reorderingRulesRoutes');
 const dashboardRoutes = require('./src/routes/dashboardRoutes');
+// Add this where your other routes are defined:
+const stockRoutes = require('./src/routes/stockRoutes');
+const stockDocumentRoutes = require('./src/routes/stockDocumentsRoutes');
+
+// Mount the route:
 
 // =========================
 // 2. MIDDLEWARE (MUST BE BEFORE ROUTES)
@@ -40,7 +45,8 @@ app.use('/api/locations', locationRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/reordering-rules', reorderingRuleRoutes);
 app.use('/api/dashboard', dashboardRoutes); // ✅ Now protected by CORS!
-
+app.use('/api/stock', stockRoutes);
+app.use('/api/stock-documents', stockDocumentRoutes);
 // =========================
 // 4. START SERVER
 // =========================
